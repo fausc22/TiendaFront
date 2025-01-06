@@ -30,6 +30,8 @@ const Confirmation = () => {
     const [pedido, setPedido] = useState(null);
     let storeName = '';
 
+    const apiUrl = import.meta.env.VITE_API_URL;
+
 
     useEffect(() => {
         const getConfig = async () => {
@@ -62,7 +64,7 @@ const Confirmation = () => {
           }));
 
           try {
-              await axios.post('http://localhost:3001/store/mailPedidoRealizado', {
+              await axios.post(`${apiUrl}/store/mailPedidoRealizado`, {
                   storeName: config.storeName,
                   name: pedido.cliente,
                   clientMail: pedido.email_cliente,
@@ -81,7 +83,7 @@ const Confirmation = () => {
     
       const insertarPedidoBaseDatos = async (pedido) => {
           try {
-              await axios.post('http://localhost:3001/store/NuevoPedido', {
+              await axios.post(`${apiUrl}/store/NuevoPedido`, {
                   cliente: pedido.cliente,
                   direccion_cliente: pedido.direccion_cliente,
                   telefono_cliente: pedido.telefono_cliente,
@@ -94,6 +96,8 @@ const Confirmation = () => {
                   productos: pedido.productos
               });
               console.log('Pedido y productos insertados correctamente en la base de datos');
+              localStorage.removeItem('cart');
+              console.log('Carrito eliminado del localStorage');
           } catch (error) {
               console.error('Error al insertar el pedido en la base de datos:', error);
           }
@@ -132,7 +136,7 @@ const Confirmation = () => {
     }
 
     const subtotal = pedido.productos.reduce((acc, item) => acc + parseFloat(item.precio) * item.cantidad, 0).toFixed(2);
-    const costoEnvio = 50.00; 
+    const costoEnvio = parseFloat(pedido.costoEnvio); 
     const totalFinal = (parseFloat(subtotal) + costoEnvio).toFixed(2);
 
     return (

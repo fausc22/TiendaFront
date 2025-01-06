@@ -5,7 +5,7 @@ import { IoMdAdd } from "react-icons/io";
 import { AiOutlineMinus } from "react-icons/ai";
 import shopping from '../../assets/img/products-img/shopping.png'; // Imagen predeterminada
 
-const CardProduct = ({ name, price, imageUrl, off, onAddToCart }) => {
+const CardProduct = ({ name, price, imageUrl, off, onAddToCart, reloadOnAdd }) => {
     const [quantity, setQuantity] = useState(0);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [finalImageUrl, setFinalImageUrl] = useState(shopping);
@@ -57,12 +57,25 @@ const CardProduct = ({ name, price, imageUrl, off, onAddToCart }) => {
             onAddToCart({ name, quantity, price: Number(price), total });
         }
 
+        
+
         // Mostrar mensaje de éxito y restablecer la cantidad
         setShowSuccessMessage(true);
         setQuantity(0);
         setTimeout(() => {
             setShowSuccessMessage(false);
+            
+
+            
+        
         }, 2000); // Mostrar el mensaje durante 2 segundos
+
+        if (reloadOnAdd) {
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000); // Recarga la página después de 2 segundos
+        }
+                
     };
 
     const total = price * quantity;

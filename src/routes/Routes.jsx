@@ -19,8 +19,8 @@ const Routes = ({ handleAddToCart }) => {
   return (
     <ReactDomRoutes>
       <Route path='/' element={<Layout> <Home onAddToCart={handleAddToCart}/> </Layout>} />
-      <Route path='/productos' element={<Layout> <Products/> </Layout>} />
-      <Route path='/checkout' element={<Layout> <Checkout/> </Layout>} />
+      <Route path='/productos' element={<Layout> <Products onAddToCart={handleAddToCart}/> </Layout>} />
+      <Route path='/checkout' element={<Layout> <Checkout onAddToCart={handleAddToCart}/> </Layout>} />
       <Route path='/pago' element={<Layout> <Pago/> </Layout>} />
       <Route path='/login' element={<LayoutPublic> <Login/> </LayoutPublic>} />
       <Route path='/ajustes' element={<LayoutPublic> <Ajustes/> </LayoutPublic>} />

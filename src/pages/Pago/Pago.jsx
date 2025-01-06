@@ -32,13 +32,17 @@ const Pago = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(''); // Estado inicial para el método de pago
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-
+  const apiUrl = import.meta.env.VITE_API_URL;
   
+  
+
 
   useEffect(() => {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     setCartItems(cart);
     
+    
+  
     
   }, []);
 
@@ -61,6 +65,7 @@ const Pago = () => {
   const subtotal = cartItems.reduce((acc, item) => acc + item.total, 0);
   const total = parseFloat(subtotal.toFixed(2)) + parseFloat(shippingCost.toFixed(2));
   
+  
 
 
   const handleAddressChange = (e) => {
@@ -72,7 +77,7 @@ const Pago = () => {
     setAddressOptions([]);
     if (address.trim()) {
       try {
-        const response = await axios.post('http://localhost:3001/store/calculateShipping', { address });
+        const response = await axios.post(`${apiUrl}/store/calculateShipping`, { address });
         if (response.data.results.length > 0) {
           setAddressOptions(response.data.results);
         } else {
@@ -161,7 +166,7 @@ const Pago = () => {
             
         } else if (selectedPaymentMethod === 'MercadoPago') {
             // Crear preferencia de pago en Mercado Pago
-            const response = await axios.post('http://localhost:3001/store/create_preference', { total });
+            const response = await axios.post(`${apiUrl}/store/create_preference`, { total });
             setPreferenceId(response.data.id);
             window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?preference-id=${response.data.id}`;
         }
@@ -176,6 +181,8 @@ const Pago = () => {
   const handleDeliveryOptionChange = (e) => {
     setDeliveryOption(e.target.value);
   };
+
+  
 
   const handleDepartmentChange = (e) => {
     setIsDepartment(e.target.value === 'si');
@@ -225,7 +232,16 @@ const Pago = () => {
               </FormLabel>
               <FormLabel>
                 Teléfono
-                <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                <input
+                  type="text"
+                  value={phone}
+                  onChange={(e) => {
+                    const regex = /^[0-9+]*$/; // Solo números y el carácter +
+                    if (regex.test(e.target.value)) {
+                      setPhone(e.target.value);
+                    }
+                  }}
+                />
               </FormLabel>
               <FormLabel>
                 Email
@@ -378,7 +394,16 @@ const Pago = () => {
               <h3>Total</h3>
               <h3>${total.toFixed(2)}</h3>
             </TextContainer>
-            <ButtonPay onClick={handleConfirmDialog}>Confirmar pedido</ButtonPay>
+            <ButtonPay 
+              onClick={handleConfirmDialog} 
+              disabled={!selectedPaymentMethod} // Deshabilita si no hay método de pago seleccionado
+              style={{
+                backgroundColor: selectedPaymentMethod ? '#007bff' : '#ccc',
+                cursor: selectedPaymentMethod ? 'pointer' : 'not-allowed',
+              }}
+            >
+              Confirmar Pedido
+</ButtonPay>
 
             <ButtonEditPay to='/checkout'>Editar Carrito</ButtonEditPay>
             

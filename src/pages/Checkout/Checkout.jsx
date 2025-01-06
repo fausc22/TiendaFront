@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   CheckoutContainerStyles, CheckoutWrapper, CheckoutTable, TableHeader, TableRow, TableCell, 
-  QuantityInput, DeleteButton, TotalCell, CheckoutData, ButtonContainer, ButtonPay, 
+  DeleteButton, TotalCell, CheckoutData, ButtonContainer, ButtonPay, 
   ButtonSearch, CheckProductsContainer, EnviromentTable, ContainerOutsideTable, 
   ViewMoreButton 
 } from './ChekoutStyles';
@@ -13,12 +13,13 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import { fetchConfig } from "../../components/variablesenv";
 
-const Checkout = ( onAddToCart ) => {
+const Checkout = ({ onAddToCart }) => {
   const [cart, setCart] = useState([]);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [config, setConfig] = useState(null);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   // Fetch config data
   useEffect(() => {
@@ -51,7 +52,7 @@ const Checkout = ( onAddToCart ) => {
       console.error('Error loading cart from localStorage:', error);
     }
 
-    axios.get('http://localhost:3001/store/artCHECKOUT')
+    axios.get(`${apiUrl}/store/artCHECKOUT`)
       .then(response => {
         setRelatedProducts(response.data);
       })
@@ -79,21 +80,21 @@ const Checkout = ( onAddToCart ) => {
   };
 
   const handleQuantityChange = (index, quantity) => {
-    // Handle maximum quantity
-    if (quantity > 30) {
-      quantity = 30;
-    }
-  
-    // Parse the quantity to a number (important for empty input)
-    const parsedQuantity = parseInt(quantity);
-  
+    // Ajusta el valor dentro del rango permitido
+    if (quantity < 1) quantity = 1;
+    if (quantity > 30) quantity = 30;
+
     const updatedCart = cart.map((item, i) => {
       if (i === index) {
-        // Set quantity to 0 if empty input is provided
-        return { ...item, quantity: parsedQuantity || 0, total: item.price * (parsedQuantity || 0) };
+        return {
+          ...item,
+          quantity,
+          total: item.price * quantity,
+        };
       }
       return item;
     });
+
     setCart(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
@@ -124,13 +125,51 @@ const Checkout = ( onAddToCart ) => {
                         <TableCell>{item.name}</TableCell>
                         <TableCell>${item.price.toFixed(2)}</TableCell>
                         <TableCell>
-                          <QuantityInput 
-                            type="number" 
-                            value={item.quantity} 
-                            min="1" 
-                            max="30" 
-                            onChange={(e) => handleQuantityChange(index, parseInt(e.target.value))}
-                          />
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <button
+                              onClick={() => handleQuantityChange(index, cart[index].quantity - 1)}
+                              disabled={cart[index].quantity <= 1}
+                              style={{
+                                width: '30px',
+                                height: '30px',
+                                border: 'none',
+                                borderRadius: '50%',
+                                backgroundColor: '#007bff',
+                                color: '#fff',
+                                fontSize: '16px',
+                                cursor: 'pointer',
+                              }}
+                            >
+                              -
+                            </button>
+                            <span
+                              style={{
+                                margin: '0 10px',
+                                fontSize: '16px',
+                                width: '30px',
+                                textAlign: 'center',
+                                userSelect: 'none',
+                              }}
+                            >
+                              {cart[index].quantity}
+                            </span>
+                            <button
+                              onClick={() => handleQuantityChange(index, cart[index].quantity + 1)}
+                              disabled={cart[index].quantity >= 30}
+                              style={{
+                                width: '30px',
+                                height: '30px',
+                                border: 'none',
+                                borderRadius: '50%',
+                                backgroundColor: '#007bff',
+                                color: '#fff',
+                                fontSize: '16px',
+                                cursor: 'pointer',
+                              }}
+                            >
+                              +
+                            </button>
+                          </div>
                         </TableCell>
                         <TableCell>${item.total.toFixed(2)}</TableCell>
                         <TableCell>
@@ -166,6 +205,8 @@ const Checkout = ( onAddToCart ) => {
                 name={product.art_desc_vta}
                 price={product.PRECIO_SIN_IVA_4}
                 imageUrl={product.CODIGO_BARRA}
+                onAddToCart={onAddToCart}
+                reloadOnAdd={true}
               />
             ))}
           </CheckProductsContainer>
@@ -193,12 +234,11 @@ const Checkout = ( onAddToCart ) => {
             padding: '20px',
             borderRadius: '8px',
             border: '1px solid #ccc',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
-          }
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          },
         }}
       >
         <h2 style={{ color: '#333', marginBottom: '20px' }}>¿Estás seguro que deseas eliminar este artículo?</h2>
-        
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <button 
             onClick={confirmDelete} 
@@ -208,7 +248,7 @@ const Checkout = ( onAddToCart ) => {
               color: '#fff',
               border: 'none',
               borderRadius: '4px',
-              cursor: 'pointer'
+              cursor: 'pointer',
             }}
           >
             Sí
@@ -221,7 +261,7 @@ const Checkout = ( onAddToCart ) => {
               color: '#fff',
               border: 'none',
               borderRadius: '4px',
-              cursor: 'pointer'
+              cursor: 'pointer',
             }}
           >
             No

@@ -10,9 +10,15 @@ import 'primeicons/primeicons.css';
 const App = () => {
   const [cartCount, setCartCount] = useState(0);
 
+  // const handleAddToCart = (quantity) => {
+  //   setCartCount(cartCount + quantity);
+  // };
+
   const handleAddToCart = (quantity) => {
-    setCartCount(cartCount + quantity);
+    setCartCount((prevCount) => prevCount + quantity);
+    
   };
+  
 
   return (
     <Router>

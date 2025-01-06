@@ -8,14 +8,10 @@ import CardProduct from '../../components/CardProduct/CardProduct';
 import BotonWhp from '../../components/BotonWhp/BotonWhp';
 import { fetchConfig } from "../../components/variablesenv";
 
-
-
 const Home = ({ onAddToCart }) => {
   const [ofertas, setOfertas] = useState([]);
   const [destacados, setDestacados] = useState([]);
   const [config, setConfig] = useState(null);
-
-  
 
   const scrollToTop = () => {
     window.scrollTo(0, 0);
@@ -28,7 +24,6 @@ const Home = ({ onAddToCart }) => {
     };
 
     getConfig();
-    
   }, []);
 
   useEffect(() => {
@@ -37,26 +32,26 @@ const Home = ({ onAddToCart }) => {
     }
   }, [config]);
 
+  // Usamos la variable de entorno para la URL base de la API
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    axios.get('http://localhost:3001/store/articulosOF')
+    axios.get(`${apiUrl}/store/articulosOF`)
       .then(response => {
         setOfertas(response.data);
       })
       .catch(error => {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data (articulosOF):', error);
       });
 
-    axios.get('http://localhost:3001/store/articulosDEST')
+    axios.get(`${apiUrl}/store/articulosDEST`)
       .then(response => {
         setDestacados(response.data);
       })
       .catch(error => {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data (articulosDEST):', error);
       });
-      
-      
-  }, []);
+  }, [apiUrl]);
 
   return (
     <HomeContainerStyled>
@@ -72,7 +67,8 @@ const Home = ({ onAddToCart }) => {
                 price={articulo.PRECIO_SIN_IVA_4}
                 imageUrl={articulo.CODIGO_BARRA} // Reemplaza con la URL de tu imagen
                 off
-                onAddToCart={onAddToCart}
+                // onAddToCart={onAddToCart}
+                onAddToCart={(item) => onAddToCart(item.quantity)}
               />
             ))}
           </CardProductContainer>
@@ -96,7 +92,6 @@ const Home = ({ onAddToCart }) => {
         </Section>
         <BotonWhp />
       </HomeWrapper>
-      
     </HomeContainerStyled>
   );
 };

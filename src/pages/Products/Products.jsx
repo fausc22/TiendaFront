@@ -10,7 +10,7 @@ import { Paginator } from 'primereact/paginator';
 import axios from 'axios';
 import { fetchConfig } from "../../components/variablesenv";
 
-const Products = ( onAddToCart ) => {
+const Products = ({ onAddToCart }) => {
   const [categoryId, setCategoryId] = useState(null);
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,6 +18,7 @@ const Products = ( onAddToCart ) => {
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(20);
   const [config, setConfig] = useState(null);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const getConfig = async () => {
@@ -36,7 +37,7 @@ const Products = ( onAddToCart ) => {
   }, [config]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/store/productosMAIN')
+    axios.get(`${apiUrl}/store/productosMAIN`)
       .then(response => {
         setProducts(response.data);
         setSearched(false);
@@ -48,7 +49,7 @@ const Products = ( onAddToCart ) => {
 
   useEffect(() => {
     if (categoryId !== null) {
-      axios.get(`http://localhost:3001/store/articulos/${categoryId}`)
+      axios.get(`${apiUrl}/store/articulos/${categoryId}`)
         .then(response => {
           setProducts(response.data);
         })
@@ -60,7 +61,7 @@ const Products = ( onAddToCart ) => {
 
   const handleSearch = (event) => {
     event.preventDefault(); // Evita que el botón recargue la página
-    axios.get(`http://localhost:3001/store/buscar?q=${searchTerm}`)
+    axios.get(`${apiUrl}/store/buscar?q=${searchTerm}`)
       .then(response => {
         setProducts(response.data);
         setSearched(true);
@@ -74,7 +75,7 @@ const Products = ( onAddToCart ) => {
 
   const handleReset = () => {
     setSearchTerm('');
-    axios.get('http://localhost:3001/store/productosMAIN')
+    axios.get(`${apiUrl}/store/productosMAIN`)
       .then(response => {
         setProducts(response.data);
         setSearched(false);
