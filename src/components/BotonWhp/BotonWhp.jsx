@@ -6,9 +6,9 @@ import { FaWhatsapp } from "react-icons/fa";
 const BotonWhp = () => {
 
     const [envVariables, setEnvVariables] = useState({});
-
+    const apiUrl = import.meta.env.VITE_API_URL;
     useEffect(() => {
-        axios.get('http://localhost:3001/store/variablesenv')
+        axios.get(`${apiUrl}/store/variablesenv`)	
           .then(response => {
             setEnvVariables(response.data);
           })

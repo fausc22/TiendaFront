@@ -8,7 +8,7 @@ import axios from 'axios';
 const Categories = ({ onSelectCategory }) => {
   const [openCategories, setOpenCategories] = useState(false);  // Menú inicialmente cerrado
   const [categories, setCategories] = useState([]);
-
+  const apiUrl = import.meta.env.VITE_API_URL;
   // Función para abrir/cerrar el menú manualmente
   const handleToggleCategories = () => {
     setOpenCategories(prev => !prev);  // Cambia el estado del menú
@@ -17,7 +17,7 @@ const Categories = ({ onSelectCategory }) => {
 
   useEffect(() => {
     // Llamada a la API para obtener las categorías
-    axios.get('http://localhost:3001/store/categorias')
+    axios.get(`${apiUrl}/store/categorias`)
       .then(response => {
         setCategories(response.data);
       })
