@@ -26,18 +26,34 @@ export const CheckoutData = styled.div`
 
 export const EnviromentTable = styled.div`
   width: 100%;
+  overflow-x: auto; /* Habilita el desplazamiento horizontal */
+  -webkit-overflow-scrolling: touch; /* Mejora la experiencia en dispositivos táctiles */
+  min-width: 100%;
 
   @media screen and (max-width: 768px) {
-    overflow-x: auto;
-    min-width: 100%;
+    padding: 0 10px; /* Añade un poco de espacio alrededor de la tabla */
   }
 `;
+
 
 export const CheckoutTable = styled.table`
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 15px;
+  table-layout: fixed; /* Fuerza que las columnas ocupen un ancho fijo */
+  font-size: 14px; /* Reduce el tamaño de fuente para más espacio */
+
+  th, td {
+    word-wrap: break-word; /* Ajusta texto largo */
+    text-align: center; /* Centra el contenido */
+    
+  }
 `;
+
+
+
+
+
 
 export const TableHeader = styled.th`
   padding: 8px;
@@ -46,7 +62,49 @@ export const TableHeader = styled.th`
   color: var(--gray-300);
   font-weight: 700;
   background-color: #f2f2f2;
+  white-space: nowrap;
+  font-size: 25px;
+
+  /* Anchos específicos para cada columna en PC */
+  &:nth-child(1) {
+    width: 35%; /* Producto */
+  }
+  &:nth-child(2) {
+    width: 25%; /* Precio */
+  }
+  &:nth-child(3) {
+    width: 25%; /* Cantidad */
+  }
+  &:nth-child(4) {
+    width: 35%; /* Subtotal */
+  }
+  &:nth-child(5) {
+    width: 5%; /* Eliminar */
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 14px;
+    text-align: center;
+    border-right: 1px solid #ddd; /* Línea vertical divisoria */
+    /* Anchos específicos para cada columna en responsive */
+    &:nth-child(1) {
+      width: 30%;
+    }
+    &:nth-child(2) {
+      width: 30%;
+    }
+    &:nth-child(3) {
+      width: 35%;
+    }
+    &:nth-child(4) {
+      width: 35%;
+    }
+    &:nth-child(5) {
+      width: 5%;
+    }
+  }
 `;
+
 
 export const TableRow = styled.tr`
   color: var(--gray-200);
@@ -57,9 +115,57 @@ export const TableRow = styled.tr`
 `;
 
 export const TableCell = styled.td`
-  padding: 8px;
+  padding: 10px;
   border-bottom: 1px solid #ddd;
+  font-size: 20px;
+  text-align: center;
+  word-wrap: break-word;
+
+  /* Anchos específicos para cada columna */
+  &:nth-child(1) {
+    width: 35%; /* Producto */
+  }
+  &:nth-child(2) {
+    width: 25%; /* Precio */
+  }
+  &:nth-child(3) {
+    width: 25%; /* Cantidad */
+  }
+  &:nth-child(4) {
+    width: 35%; /* Subtotal */
+  }
+  &:nth-child(5) {
+    width: 5%; /* Eliminar */
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 4px;
+    font-size: 15px;
+
+    border-right: 1px solid #ddd; /* Línea vertical divisoria */
+    /* Anchos específicos para cada columna en responsive */
+    &:nth-child(1) {
+      width: 30%;
+    }
+    &:nth-child(2) {
+      width: 30%;
+    }
+    &:nth-child(3) {
+      width: 35%;
+    }
+    &:nth-child(4) {
+      width: 35%;
+      
+    }
+    &:nth-child(5) {
+      width: 5%;
+      border-right: none; /* Elimina la línea de la última columna */   
+    }
+  }
 `;
+
+
+
 
 export const QuantityInput = styled.input`
   width: 50px;
@@ -155,6 +261,10 @@ export const CheckProductsContainer = styled.div`
   justify-content: center;
   width: 100%;
   gap: 50px;
+
+  @media screen and (max-width: 768px){
+        gap: 10px;
+    }
 `;
 
 export const ViewMoreButton = styled(NavLink)`

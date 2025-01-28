@@ -17,9 +17,12 @@ export const CardProductContainer = styled.div`
     gap: 50px;
 
     @media screen and (max-width: 768px){
-        
+        gap: 10px;
     }
-`
+`   
+
+
+
 export const ViewMoreButton = styled(NavLink)`
     background-color: transparent;
     color: var(--blue);

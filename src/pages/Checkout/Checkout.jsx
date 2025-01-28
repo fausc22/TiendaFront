@@ -115,7 +115,7 @@ const Checkout = ({ onAddToCart }) => {
                     <TableHeader>Precio</TableHeader>
                     <TableHeader>Cantidad</TableHeader>
                     <TableHeader>Subtotal</TableHeader>
-                    <TableHeader>Eliminar</TableHeader>
+                    <TableHeader></TableHeader>
                   </tr>
                 </thead>
                 <tbody>
