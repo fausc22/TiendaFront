@@ -64,10 +64,9 @@ const Home = ({ onAddToCart }) => {
               <CardProduct
                 key={index}
                 name={articulo.art_desc_vta}
-                price={articulo.PRECIO_SIN_IVA_4}
+                price={articulo.PRECIO}
                 imageUrl={articulo.CODIGO_BARRA} // Reemplaza con la URL de tu imagen
-                off
-                // onAddToCart={onAddToCart}
+                
                 onAddToCart={(item) => onAddToCart(item.quantity)}
               />
             ))}
@@ -82,7 +81,7 @@ const Home = ({ onAddToCart }) => {
               <CardProduct
                 key={index}
                 name={articulo.art_desc_vta}
-                price={articulo.PRECIO_SIN_IVA_4}
+                price={articulo.PRECIO}
                 imageUrl={articulo.CODIGO_BARRA} // Reemplaza con la URL de tu imagen
                 onAddToCart={onAddToCart}
               />

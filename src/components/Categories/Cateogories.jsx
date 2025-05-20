@@ -26,12 +26,12 @@ const Categories = ({ onSelectCategory }) => {
       });
   }, []);
 
-  // Función que maneja la selección de una categoría
-  const handleSelectCategory = (id) => {
-    onSelectCategory(id);  // Llama a la función pasada como prop
-    setOpenCategories(false);  // Cierra el menú automáticamente
-    console.log(`Selected category: ${id}. Closing categories menu.`);
-  };
+  const handleSelectCategory = (name) => {
+    onSelectCategory(name); // Enviar el nombre en vez del ID
+    setOpenCategories(false);
+    console.log(`Selected category: ${name}. Closing categories menu.`);
+};
+
 
   return (
     <>
@@ -53,10 +53,10 @@ const Categories = ({ onSelectCategory }) => {
               </CategoriesTitle>
               <CategoriesContainer>
                 {categories.map(category => (
-                  <Categorie key={category.id_clasif} onClick={() => handleSelectCategory(category.id_clasif)}>
-                    <a href={`#${category.id_clasif}`}>{category.NOM_CLASIF}</a>
-                    <FaArrowRight />
-                  </Categorie>
+                  <Categorie key={category.NOM_CLASIF} onClick={() => handleSelectCategory(category.NOM_CLASIF)}>
+                  <a href={`#${category.NOM_CLASIF}`}>{category.NOM_CLASIF}</a>
+                  <FaArrowRight />
+                </Categorie>
                 ))}
               </CategoriesContainer>
             </CategoriesWrapper>

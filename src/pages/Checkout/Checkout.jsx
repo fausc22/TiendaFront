@@ -52,7 +52,7 @@ const Checkout = ({ onAddToCart }) => {
       console.error('Error loading cart from localStorage:', error);
     }
 
-    axios.get(`${apiUrl}/store/artCHECKOUT`)
+    axios.get(`${apiUrl}/store/articulosDest`)
       .then(response => {
         setRelatedProducts(response.data);
       })
@@ -203,7 +203,7 @@ const Checkout = ({ onAddToCart }) => {
               <CardProduct
                 key={index}
                 name={product.art_desc_vta}
-                price={product.PRECIO_SIN_IVA_4}
+                price={product.PRECIO}
                 imageUrl={product.CODIGO_BARRA}
                 onAddToCart={onAddToCart}
                 reloadOnAdd={true}

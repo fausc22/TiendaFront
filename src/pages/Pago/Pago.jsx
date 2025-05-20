@@ -33,7 +33,8 @@ const Pago = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const apiUrl = import.meta.env.VITE_API_URL;
-  
+  const [paymentError, setPaymentError] = useState(''); // Mensaje de error para pagos
+
   
 
 
@@ -180,7 +181,27 @@ const Pago = () => {
 
   const handleDeliveryOptionChange = (e) => {
     setDeliveryOption(e.target.value);
+    
+    setSelectedPaymentMethod(''); // Resetea el método de pago cuando cambia la forma de entrega
+    setPaymentError(''); // Limpia el mensaje de error
   };
+
+  const handlePaymentMethodChange = (e) => {
+    const selectedMethod = e.target.value;
+
+    if (!deliveryOption) {
+        setPaymentError('Debe seleccionar una forma de entrega antes de elegir un método de pago.');
+        return;
+    }
+
+    if (selectedMethod === 'Efectivo' && deliveryOption !== 'local') {
+        setPaymentError('PARA PAGOS EN EFECTIVO DEBE SELECCIONAR RETIRO EN EL LOCAL');
+        return;
+    }
+
+    setSelectedPaymentMethod(selectedMethod);
+    setPaymentError(''); // Limpia el error si la selección es válida
+};
 
   
 
@@ -346,16 +367,30 @@ const Pago = () => {
                 </>
               )}
               <FormLabel>
-                    Método de pago
-                    <OptGroup>
-                      <input type="radio" name="metodo_pago" value="efectivo" onChange={(e) => setSelectedPaymentMethod('Efectivo')} />
-                      <p>Efectivo</p>
-                    </OptGroup>
-                    <OptGroup>
-                      <input type="radio" name="metodo_pago" value="mercado_pago" onChange={(e) => setSelectedPaymentMethod('MercadoPago')} />
-                      <p>Mercado pago / Tarjeta de crédito/débito</p>
-                    </OptGroup>
-                  </FormLabel>
+                  Método de pago
+                  <OptGroup>
+                      <input 
+                          type="radio" 
+                          name="metodo_pago" 
+                          value="Efectivo" 
+                          onChange={handlePaymentMethodChange} 
+                          disabled={!deliveryOption || deliveryOption !== 'local'} 
+                      />
+                      <p style={{ color: !deliveryOption || deliveryOption !== 'local' ? 'gray' : 'black' }}>Efectivo</p>
+                  </OptGroup>
+                  <OptGroup>
+                      <input 
+                          type="radio" 
+                          name="metodo_pago" 
+                          value="MercadoPago" 
+                          onChange={handlePaymentMethodChange} 
+                          disabled={!deliveryOption}
+                      />
+                      <p style={{ color: !deliveryOption ? 'gray' : 'black' }}>Mercado Pago / Tarjeta de crédito/débito</p>
+                  </OptGroup>
+              </FormLabel>
+              {paymentError && <p style={{ color: 'red', fontSize: '12px', marginTop: '5px' }}>{paymentError}</p>}
+
               <FormLabel>
                 Nota para el local
                 <input type="text" value={localNote} onChange={(e) => setLocalNote(e.target.value)} />

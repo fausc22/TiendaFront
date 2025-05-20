@@ -49,7 +49,7 @@ const Products = ({ onAddToCart }) => {
 
   useEffect(() => {
     if (categoryId !== null) {
-      axios.get(`${apiUrl}/store/articulos/${categoryId}`)
+      axios.get(`${apiUrl}/store/articulos/${encodeURIComponent(categoryId)}`)
         .then(response => {
           setProducts(response.data);
         })
@@ -57,7 +57,8 @@ const Products = ({ onAddToCart }) => {
           console.error('Error fetching products:', error);
         });
     }
-  }, [categoryId]);
+}, [categoryId]);
+
 
   const handleSearch = (event) => {
     event.preventDefault(); // Evita que el botón recargue la página
@@ -118,7 +119,7 @@ const Products = ({ onAddToCart }) => {
                 <CardProduct
                   key={product.CODIGO_BARRA}
                   name={product.art_desc_vta}
-                  price={product.PRECIO_SIN_IVA_4}
+                  price={product.PRECIO}
                   imageUrl={product.CODIGO_BARRA} // Usa la URL de la imagen si está disponible
                   
                   onAddToCart={onAddToCart}

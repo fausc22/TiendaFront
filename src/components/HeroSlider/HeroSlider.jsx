@@ -1,43 +1,38 @@
-import React from 'react'
-import { CustomImage, HeroContainerStyled, HeroWrapper } from './HeroSliderStyles'
+import React, { useState, useEffect } from "react";
+import { HeroContainerStyled, HeroWrapper, CustomImage } from "./HeroSliderStyles";
+import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
-
-import ImageGallery from 'react-image-gallery';
-import cocaImage from '../../assets/img/hero-img/coca.jpg';
-import arcorImage from '../../assets/img/hero-img/arcor.jpg';
-import prittyImage from '../../assets/img/hero-img/pritty.jpg';
+import axios from "axios";
 
 const HeroSlider = () => {
+    const [imagenes, setImagenes] = useState([]);
 
-    const images = [
-        {
-            original: cocaImage
-        },
-        {
-            original: arcorImage
-        },
-        {
-            original: prittyImage
-        },
-    ]
+    useEffect(() => {
+        const fetchImagenesPublicidad = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/store/getImagenesPublicidad`);
+                setImagenes(response.data.map(url => ({ original: `${import.meta.env.VITE_API_URL}${url}` })));
+            } catch (error) {
+                console.error("Error al obtener imágenes de publicidad:", error);
+            }
+        };
+        fetchImagenesPublicidad();
+    }, []);
 
-  return (
-    <HeroContainerStyled>
-        <HeroWrapper>
-        <ImageGallery
-          items={images}
-          showPlayButton={false}
-          showFullscreenButton={false}
-          showBullets={true}
-          autoPlay={true}
-          renderItem={(item) => (
-            // Usa el componente de imagen personalizado para aplicar el estilo
-            <CustomImage src={item.original} alt={item.originalAlt} />
-          )}
-        />
-        </HeroWrapper>
-    </HeroContainerStyled>
-  )
-}
+    return (
+        <HeroContainerStyled>
+            <HeroWrapper>
+                <ImageGallery
+                    items={imagenes}
+                    showPlayButton={false}
+                    showFullscreenButton={false}
+                    showBullets={true}
+                    autoPlay={true}
+                    renderItem={(item) => <CustomImage src={item.original} />}
+                />
+            </HeroWrapper>
+        </HeroContainerStyled>
+    );
+};
 
-export default HeroSlider
+export default HeroSlider;

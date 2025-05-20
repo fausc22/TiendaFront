@@ -91,9 +91,10 @@ const CardProduct = ({ name, price, imageUrl, off, onAddToCart, reloadOnAdd }) =
             <ProductInfoContainer>
                 <h3>{name}</h3>
                 <PriceOfferContainer>
-                    {off && <p>$1.500</p>}
+                    {off && <p style={{ textDecoration: "line-through", color: "red" }}>${off}</p>}
                     <span>${price}</span>
                 </PriceOfferContainer>
+
                 <ProductFoot>
                     <ProductQuantity>
                         <AiOutlineMinus onClick={handleDecrease} />

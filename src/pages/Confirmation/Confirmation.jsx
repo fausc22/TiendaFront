@@ -90,6 +90,7 @@ const Confirmation = () => {
                   email_cliente: pedido.email_cliente,
                   cantidad_productos: pedido.productos.length,
                   monto_total: pedido.monto_total,
+                  costo_envio: pedido.costoEnvio,
                   medio_pago: pedido.medio_pago,
                   estado: 'Pendiente',
                   notas_local: pedido.notas_local,
